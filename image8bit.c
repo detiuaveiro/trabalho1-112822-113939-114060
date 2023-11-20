@@ -172,6 +172,31 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
   assert (height >= 0);
   assert (0 < maxval && maxval <= PixMax);
   // Insert your code here!
+  
+  Image newImage = (Image)malloc(sizeof(struct image));
+
+  if (newImage == NULL)
+  {
+    errCause = "Falha na alocação de memória para a estrutura da imagem";
+    return NULL;
+  }
+  
+  newImage->height = height;
+  newImage->width = width;
+  newImage->maxval = maxval;
+  newImage->pixel = (uint8*)malloc(width * height * sizeof(uint8));
+
+  if (newImage->pixel == NULL)
+  {
+    errCause = "Falha na alocação de memória para os pixeis"
+    free(newImage);
+    return NULL;
+  }
+
+    for (int i = 0; i < width * height; i++) {
+        newImage->pixel[i] = 0;
+    }
+    return newImage;
 }
 
 /// Destroy the image pointed to by (*imgp).
@@ -182,6 +207,8 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
 void ImageDestroy(Image* imgp) { ///
   assert (imgp != NULL);
   // Insert your code here!
+
+  
 }
 
 
