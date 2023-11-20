@@ -200,14 +200,25 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
   return newImage;
 }
 
+
+
 /// Destroy the image pointed to by (*imgp).
 ///   imgp : address of an Image variable.
 /// If (*imgp)==NULL, no operation is performed.
 /// Ensures: (*imgp)==NULL.
 /// Should never fail, and should preserve global errno/errCause.
 void ImageDestroy(Image* imgp) { ///
-  assert (imgp != NULL);
-  // Insert your code here!
+    assert(imgp != NULL);
+
+    // Insert your code here!
+
+    // Libera o array de pixels
+    free((*imgp)->pixel);
+    (*imgp)->pixel = NULL;
+
+    // Libera a estrutura da imagem
+    free(*imgp);
+    *imgp = NULL;
 
   
 }
