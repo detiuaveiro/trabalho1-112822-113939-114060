@@ -177,26 +177,27 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
 
   if (newImage == NULL)
   {
-    errCause = "Falha na alocação de memória para a estrutura da imagem";
+    errCause = "Falha na alocação de memória para a estrutura da imagem"; // Em caso de falha na alocação de memória define a mensagem de erro
     return NULL;
   }
   
-  newImage->height = height;
-  newImage->width = width;
-  newImage->maxval = maxval;
+  newImage->height = height; // Define a altura da imagem
+  newImage->width = width; // Define a largura da imagem
+  newImage->maxval = maxval; // Define o valor máximo de cinza
   newImage->pixel = (uint8*)malloc(width * height * sizeof(uint8));
 
   if (newImage->pixel == NULL)
   {
-    errCause = "Falha na alocação de memória para os pixeis"
-    free(newImage);
+    errCause = "Falha na alocação de memória para os pixeis"; // Define a mensagem de erro
+    free(newImage); // Liberta a memória alocada para a estrutura da imagem
     return NULL;
   }
 
-    for (int i = 0; i < width * height; i++) {
+// Inicializa todos os pixels da imagem com o valor mínimo de intensidade (0) como padrão
+  for (int i = 0; i < width * height; i++) {
         newImage->pixel[i] = 0;
-    }
-    return newImage;
+  }
+  return newImage;
 }
 
 /// Destroy the image pointed to by (*imgp).
