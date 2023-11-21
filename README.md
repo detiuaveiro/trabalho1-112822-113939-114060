@@ -44,7 +44,7 @@ Sugere-se o desenvolvimento progressivo pela seguinte ordem:
    valgrind ./imageTool test/original.pgm save out.pgm`
    ```
    
-   Isto chama `ImageLoad`, que chama `ImageCreate`
+   Isto chama `ImageLoad`, que chama `ImageCreate` 
    e depois `ImageSave` e `ImageDestroy`.
    Verificar que toda a memória foi libertada.
 3. Completar a função interna `G`,

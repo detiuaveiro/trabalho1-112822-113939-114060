@@ -344,9 +344,9 @@ void ImageStats(Image img, uint8* min, uint8* max) { ///
   int width = img->width; // Obtém a largura da imagem
 
   // Percorrer todos os pixels da imagem
-  for (int y = 0;y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      uint8 pixel = ImageGetPixel(img, x, y); // Obtém o valor do pixel
+  for (int i = 0;i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      uint8 pixel = ImageGetPixel(img, j, i); // Obtém o valor do pixel
       if (pixel < *min) {
         *min = pixel; // Caso seja menor que *min este passa a ter o valor do pixel
       }
@@ -506,10 +506,10 @@ Image ImageRotate(Image img) { ///
   Image rotImg = ImageCreate(height, width, img->maxval);    // Criação nova imagem chamada rotImg
 
   // Percorrer todos os pixeis da imagem
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      uint8 pixel = ImageGetPixel(img, x, y); // Obter o valor do pixel
-      ImageSetPixel(rotImg, y, width - x - 1, pixel); // Define o valor do pixel na nova imagem
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      uint8 pixel = ImageGetPixel(img, j, y); // Obter o valor do pixel
+      ImageSetPixel(rotImg, i, width - j - 1, pixel); // Define o valor do pixel na nova imagem
     }
   }
   return rotImg;  // Retornar a imagem rodada em 90 graus anti-horáriox
@@ -533,10 +533,10 @@ Image ImageMirror(Image img) { ///
   Image mirrorImg = ImageCreate(height, width, img->maxval); // Criação nova imagem chamada mirrorImg
 
   // Percorrer todos os pixeis da imagem
-  for (int x; x < height; x++) {
-    for (int y; y < width; y++) {
-      uint8 pixel = ImageGetPixel(img, x, y); // Obter o valor do pixel
-      ImageSetPixel(mirrorImg, width-x-1, y, pixel); // Define o valor do pixel imagem espelhada
+  for (int j; j < height; j++) {
+    for (int i; i < width; i++) {
+      uint8 pixel = ImageGetPixel(img, j, i); // Obter o valor do pixel
+      ImageSetPixel(mirrorImg, width-j-1, i, pixel); // Define o valor do pixel imagem espelhada
     }
   }
   return mirrorImg; // Retornar a imagem espelhada
@@ -556,8 +556,13 @@ Image ImageMirror(Image img) { ///
 /// On failure, returns NULL and errno/errCause are set accordingly.
 Image ImageCrop(Image img, int x, int y, int w, int h) { ///
   assert (img != NULL);
-  assert (ImageValidRect(img, x, y, w, h));
+  assert (ImageValidRect(img, x, y, w, h)); // retangulo deve estar dentro da imagem original 
   // Insert your code here!
+
+  Image cropImg = ImageCreate(h, w, img->maxval);  // Criar nova imagem chamada cropImg
+
+  // Completar...
+  return cropImg;
 }
 
 
