@@ -578,10 +578,23 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
   int maxval = img->maxval;
 
   Image cropImg = ImageCreate(h, w, maxval);  // Criar nova imagem chamada cropImg
+  
+  //ponteiros para os pixels das imagens originais e imagens crop
+  uint8_t** original_Pixel = img->pixel;
+  uint8_t** cropped_pixel = cropImg->pixel;
+
   if(cropImg == NULL){
-    errCause = "Erro";
+    errCause = "Erro na criação da imagem!";
+    return NULL;
   }
+
+  for (int i = 0; i < h; i++) {
+    for (int j = 0; j < w; j++) {
+      cropped_pixel[i][j] = original_Pixel[y + i][x + j];
+      }
+    }
   return cropImg;
+  // acabar - NÃO ESTÁ COMPLETO
 }
 
 
