@@ -573,12 +573,9 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
   assert (img != NULL);
   assert (ImageValidRect(img, x, y, w, h)); // retangulo deve estar dentro da imagem original 
   // Insert your code here!
-  //int height = img->height;
-  //int width = img->width;
   int maxval = img->maxval;
 
   Image cropImg = ImageCreate(h, w, maxval);  // Criar nova imagem chamada cropImg
-
 
   if(cropImg == NULL){
     errCause = "Erro na criação da imagem!";
@@ -587,14 +584,12 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
 
   for (int i = 0; i < h; i++) {
     for (int j = 0; j < w; j++) {
-      uint8 pixel = ImageGetPixel(img, x + j, y +i);
-      ImageSetPixel(cropImg, j, i, pixel);
+      uint8 pixel = ImageGetPixel(img, x + j, y +i);   // Obter o pixel da imagem cuja posição é (x + j, y + i)
+      ImageSetPixel(cropImg, j, i, pixel);      // Definir o pixel da imagem cortada na posição (j, i)
       }
     }
-  return cropImg;
-  // acabar - NÃO ESTÁ COMPLETO
+  return cropImg;           // Retorna a imagem cortada
 }
-
 
 /// Operations on two images
 
@@ -709,6 +704,41 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
 /// The image is changed in-place.
 void ImageBlur(Image img, int dx, int dy) { ///
   // Insert your code here!
-  
+  assert(img!=NULL);
+
+
+  int height = img->height;
+  int width = img->width;
+  int maxval = img->maxval;
+
+  Image blurImg = ImageCreate(width, height, maxval); // Criar imagem para ser desfocada 
+
+  // Percorrer todos os pixeis dessa imagem
+  for (int j=0; j < height; j++) {
+    for (int i=0; i < width; i++) { 
+      int count = 0;                        // Inicialização de uma variável de contagem de pixeis
+      int soma = 0;                         // Inicialização de variavel da soma de pixeis 
+
+      for (int x = -dx; x<=dx; x++) {                       // Percorrer pixeis entre as posições (x-dx, x+dx)
+        for (int y = -dy; y<dy; y++) {                      // Percorrer pixeis entre as posições (y-dy, y+dy)
+          if (ImageValidPos(img, i+y, j+x)){                // Verifica se o posição está dentro da imagem
+            soma += ImageGetPixel(img, i+y, j+x);           // Somar o valor dos pixeis válidos
+            count++;                                        // Incrementa o contador
+          }     
+        }
+      }
+      uint8 pixel = (uint8)(soma / count);    // Calcula a média dos valores dos pixeis
+      ImageSetPixel(blurImg, i, j, pixel);      // Define o valor na imagem desfocada
+
+    
+  // Percorre os valores da imagem desfocada de modo a substituí-los na imagem original
+  for (int y = 0; y < img->height; y++) {
+    for (int x = 0; x < img->width; x++) {
+        uint8 blurredPixel = ImageGetPixel(blurImg, x, y);
+        ImageSetPixel(img, x, y, blurredPixel);  // Substitui os pixels pelos valores filtrados
+        }
+    }
+    }
+  }
 }
 
