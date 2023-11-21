@@ -173,31 +173,31 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
   assert (0 < maxval && maxval <= PixMax);
   // Insert your code here!
   
-  Image newImage = (Image)malloc(sizeof(struct image));
+  Image img = (Image)malloc(sizeof(struct image));
 
-  if (newImage == NULL)
+  if (img == NULL)
   {
     errCause = "Falha na alocação de memória para a estrutura da imagem"; // Em caso de falha na alocação de memória define a mensagem de erro
     return NULL;
   }
   
-  newImage->height = height; // Define a altura da imagem
-  newImage->width = width; // Define a largura da imagem
-  newImage->maxval = maxval; // Define o valor máximo de cinza
-  newImage->pixel = (uint8*)malloc(width * height * sizeof(uint8));
+  img->height = height; // Define a altura da imagem
+  img->width = width; // Define a largura da imagem
+  img->maxval = maxval; // Define o valor máximo de cinza
+  img->pixel = (uint8*)malloc(width * height * sizeof(uint8));
 
-  if (newImage->pixel == NULL)
+  if (img->pixel == NULL)
   {
     errCause = "Falha na alocação de memória para os pixeis"; // Define a mensagem de erro
-    free(newImage); // Liberta a memória alocada para a estrutura da imagem
+    free(img); // Liberta a memória alocada para a estrutura da imagem
     return NULL;
   }
 
 // Inicializa todos os pixels da imagem com o valor mínimo de intensidade (0) como padrão
   for (int i = 0; i < width * height; i++) {
-        newImage->pixel[i] = 0;
+        img->pixel[i] = 0;
   }
-  return newImage;
+  return img;
 }
 
 
@@ -207,20 +207,20 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
 /// If (*imgp)==NULL, no operation is performed.
 /// Ensures: (*imgp)==NULL.
 /// Should never fail, and should preserve global errno/errCause.
-void ImageDestroy(Image* imgp) { ///
-    assert(imgp != NULL);
+
+
+void ImageDestroy(Image* imgp) {
+    assert(*imgp != NULL);
 
     // Insert your code here!
 
-    // Libera o array de pixels
+    // Liberta a lista de pixels
     free((*imgp)->pixel);
     (*imgp)->pixel = NULL;
 
-    // Libera a estrutura da imagem
+    // Liberta a estrutura da imagem
     free(*imgp);
     *imgp = NULL;
-
-  
 }
 
 
@@ -241,11 +241,14 @@ static int skipComments(FILE* f) {
   return i;
 }
 
+
 /// Load a raw PGM file.
 /// Only 8 bit PGM files are accepted.
 /// On success, a new image is returned.
 /// (The caller is responsible for destroying the returned image!)
 /// On failure, returns NULL and errno/errCause are set accordingly.
+
+
 Image ImageLoad(const char* filename) { ///
   int w, h;
   int maxval;
@@ -332,7 +335,26 @@ int ImageMaxval(Image img) { ///
 /// *max is set to the maximum.
 void ImageStats(Image img, uint8* min, uint8* max) { ///
   assert (img != NULL);
-  // Insert your code here!
+  assert (min != NULL); // Verificar se *min é diferente de NULL
+  assert (max != NULL); // Verificar se *max é diferente de NULL 
+// Insert your code here!
+
+  *min = *max = ImageGetPixel(img ,0 , 0); // Inicializa *min e *max com o valor do primeiro pixel da imagem
+  int height = img->height; // Obtém a altura da imagem
+  int width = img->width; // Obtém a largura da imagem
+
+  // Percorrer todos os pixels da imagem
+  for (int y = 0;y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      uint8 pixel = ImageGetPixel(img, x, y); // Obtém o valor do pixel
+      if (pixel < *min) {
+        *min = pixel; // Caso seja menor que *min este passa a ter o valor do pixel
+      }
+      if (pixel > *max) {
+        *max = pixel; // Caso seja maior que *max este passa a ter o valor do pixel
+      }  
+    }
+  }
 }
 
 /// Check if pixel position (x,y) is inside img.
@@ -370,8 +392,7 @@ uint8 ImageGetPixel(Image img, int x, int y) { ///
   assert (ImageValidPos(img, x, y));
   PIXMEM += 1;  // count one pixel access (read)
   return img->pixel[G(img, x, y)];
-} 
-
+}
 /// Set the pixel at position (x,y) to new level.
 void ImageSetPixel(Image img, int x, int y, uint8 level) { ///
   assert (img != NULL);
@@ -379,7 +400,6 @@ void ImageSetPixel(Image img, int x, int y, uint8 level) { ///
   PIXMEM += 1;  // count one pixel access (store)
   img->pixel[G(img, x, y)] = level;
 } 
-
 
 /// Pixel transformations
 
