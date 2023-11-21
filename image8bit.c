@@ -573,10 +573,14 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
   assert (img != NULL);
   assert (ImageValidRect(img, x, y, w, h)); // retangulo deve estar dentro da imagem original 
   // Insert your code here!
+  //int height = img->height;
+  //int width = img->width;
+  int maxval = img->maxval;
 
-  Image cropImg = ImageCreate(h, w, img->maxval);  // Criar nova imagem chamada cropImg
-
-  // Completar...
+  Image cropImg = ImageCreate(h, w, maxval);  // Criar nova imagem chamada cropImg
+  if(cropImg == NULL){
+    errCause = "Erro";
+  }
   return cropImg;
 }
 
@@ -590,12 +594,10 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
 void ImagePaste(Image img1, int x, int y, Image img2) { ///
   assert (img1 != NULL);
   assert (img2 != NULL);
-  assert (ImageValidRect(img1, x, y, img2->width, img2->height)); // Verifica se a imagem2 que vai ser colada cabe dentro da imagem1
-  // Insert your code here!
-
   // Obter a largura e altura da imagem2 para eventual uso
-  int img2 = img2->width;
-  int img2 = img2->height;
+  int img2_width = img2->width;
+  int img2_height = img2->height;
+  assert (ImageValidRect(img1, x, y, img2_width, img2_height)); // Verifica se a imagem2 que vai ser colada cabe dentro da imagem1
 
   // Percorrer todos os pixeis da imagem2 
   for (int j = 0; j < img2->height; j++) {
