@@ -466,12 +466,27 @@ void ImageThreshold(Image img, uint8 thr) { ///
 /// Multiply each pixel level by a factor, but saturate at maxval.
 /// This will brighten the image if factor>1.0 and
 /// darken the image if factor<1.0.
-void ImageBrighten(Image img, double factor) { ///
+void ImageBrighten(Image img, double factor) { 
   assert (img != NULL);
   // ? assert (factor >= 0.0);
   // Insert your code here!
 
-}
+  int height = img->height;
+  int width = img->width;
+  int maxval = img->maxval;
+
+  for (int i = 0; i < height; i++){
+    for (int j = 0; j < width; j++){
+      // obter o pixel atual nas coordenadas i,j
+      uint8 actual_pixel = ImageGetPixel(img,j,i);
+      double brighten = actual_pixel * factor;
+      if(brighten > maxval){
+        brighten = maxval; 
+      }
+      ImageSetPixel(img,j,i,(uint8)(brighten));
+    }
+  }
+} 
 
 
 /// Geometric transformations
@@ -508,7 +523,7 @@ Image ImageRotate(Image img) { ///
   // Percorrer todos os pixeis da imagem
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      uint8 pixel = ImageGetPixel(img, j, y); // Obter o valor do pixel
+      uint8 pixel = ImageGetPixel(img, j, i); // Obter o valor do pixel
       ImageSetPixel(rotImg, i, width - j - 1, pixel); // Define o valor do pixel na nova imagem
     }
   }
@@ -533,8 +548,8 @@ Image ImageMirror(Image img) { ///
   Image mirrorImg = ImageCreate(height, width, img->maxval); // Criação nova imagem chamada mirrorImg
 
   // Percorrer todos os pixeis da imagem
-  for (int j; j < height; j++) {
-    for (int i; i < width; i++) {
+  for (int j = 0; j < height; j++) {
+    for (int i = 0; i < width; i++) {
       uint8 pixel = ImageGetPixel(img, j, i); // Obter o valor do pixel
       ImageSetPixel(mirrorImg, width-j-1, i, pixel); // Define o valor do pixel imagem espelhada
     }
