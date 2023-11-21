@@ -210,7 +210,7 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
 
 
 void ImageDestroy(Image* imgp) {
-    assert(*imgp != NULL);
+    assert(imgp != NULL);
 
     // Insert your code here!
 
@@ -412,9 +412,27 @@ void ImageSetPixel(Image img, int x, int y, uint8 level) { ///
 /// Transform image to negative image.
 /// This transforms dark pixels to light pixels and vice-versa,
 /// resulting in a "photographic negative" effect.
+
+// transformar imagens na sua versão negativa. Inverte os niveis de pixel. pixeis escuros -> pixeis claros
 void ImageNegative(Image img) { ///
-  assert (img != NULL);
-  // Insert your code here!
+  // verificar se a imagem não é nula para poder prosseguir
+  assert (img != NULL); 
+
+  // obter info da imagem para eventual uso
+  int width = img->width;
+  int height = img->height;
+  int maxval = img->maxval;
+  int pixel = img->pixel;
+
+  // iterar sobre cada pixel da imagem, para poder aceder a cada pixel individualmente
+  for(int i = 0; i < height; i++){
+    for(int j = 0; j < width; j++){
+      // obter o pixel atual para posteriormente ser alterada a sua cor
+      uint8 actual_pixel = ImageGetPixel(img, j, i);
+      // definir o valor do pixel, calculando o valor do pixel maxval
+      ImageSetPixel(img, j, i, (uint8)(maxval - actual_pixel)); 
+    }
+  }
 }
 
 /// Apply threshold to image.
