@@ -422,7 +422,6 @@ void ImageNegative(Image img) { ///
   int width = img->width;
   int height = img->height;
   int maxval = img->maxval;
-  int pixel = img->pixel;
 
   // iterar sobre cada pixel da imagem, para poder aceder a cada pixel individualmente
   for(int i = 0; i < height; i++){
@@ -445,7 +444,6 @@ void ImageThreshold(Image img, uint8 thr) { ///
   int height = img->height;
   int width = img->width;
   int maxval = img->maxval;
-  int pixel = img->pixel;
 
   // iterar sobre cada pixel da imagem, para poder aceder a cada pixel individualmente
   for (int i = 0; i < height; i++){
@@ -472,6 +470,7 @@ void ImageBrighten(Image img, double factor) { ///
   assert (img != NULL);
   // ? assert (factor >= 0.0);
   // Insert your code here!
+
 }
 
 
