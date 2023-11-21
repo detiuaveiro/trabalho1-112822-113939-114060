@@ -173,31 +173,31 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
   assert (0 < maxval && maxval <= PixMax);
   // Insert your code here!
   
-  Image img = (Image)malloc(sizeof(struct image));
+  Image newImg = (Image)malloc(sizeof(struct image));
 
-  if (img == NULL)
+  if (newImg == NULL)
   {
     errCause = "Falha na alocação de memória para a estrutura da imagem"; // Em caso de falha na alocação de memória define a mensagem de erro
     return NULL;
   }
   
-  img->height = height; // Define a altura da imagem
-  img->width = width; // Define a largura da imagem
-  img->maxval = maxval; // Define o valor máximo de cinza
-  img->pixel = (uint8*)malloc(width * height * sizeof(uint8));
+  newImg->height = height; // Define a altura da imagem
+  newImg->width = width; // Define a largura da imagem
+  newImg->maxval = maxval; // Define o valor máximo de cinza
+  newImg->pixel = (uint8*)malloc(width * height * sizeof(uint8));
 
-  if (img->pixel == NULL)
+  if (newImg->pixel == NULL)
   {
     errCause = "Falha na alocação de memória para os pixeis"; // Define a mensagem de erro
-    free(img); // Liberta a memória alocada para a estrutura da imagem
+    free(newImg); // Liberta a memória alocada para a estrutura da imagem
     return NULL;
   }
 
 // Inicializa todos os pixels da imagem com o valor mínimo de intensidade (0) como padrão
   for (int i = 0; i < width * height; i++) {
-        img->pixel[i] = 0;
+        newImg->pixel[i] = 0;
   }
-  return img;
+  return newImg;
 }
 
 
@@ -380,7 +380,7 @@ int ImageValidRect(Image img, int x, int y, int w, int h) { ///
 // This internal function is used in ImageGetPixel / ImageSetPixel. 
 // The returned index must satisfy (0 <= index < img->width*img->height)
 static inline int G(Image img, int x, int y) {
-  int index;
+  int index = y * img->width + x;
   // Insert your code here!
   assert (0 <= index && index < img->width*img->height);
   return index;
