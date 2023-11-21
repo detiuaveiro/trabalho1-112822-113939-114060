@@ -367,8 +367,8 @@ int ImageValidPos(Image img, int x, int y) { ///
 int ImageValidRect(Image img, int x, int y, int w, int h) { ///
   assert (img != NULL);
   // Insert your code here!
+  return ImageValidPos(img, x, y) && (0 <= w && w < img->width) && (0 <= h && h < img->height); // Verifica se a posição (x,y) é válida e verifica se a largura e altura são maiores que 0 e menores que a largura e altura da imagem.
 }
-
 /// Pixel get & set operations
 
 /// These are the primitive operations to access and modify a single pixel
@@ -498,9 +498,21 @@ void ImageBrighten(Image img, double factor) { ///
 Image ImageRotate(Image img) { ///
   assert (img != NULL);
   // Insert your code here!
-  
 
+  // Obter a largura e altura da imagem para eventual uso
+  int width = img->width;
+  int height = img->height;
 
+  Image rotImg = ImageCreate(height, width, img->maxval);    // Criação nova imagem chamada rotImg
+
+  // Percorrer todos os pixeis da imagem
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      uint8 pixel = ImageGetPixel(img, x, y); // Obter o valor do pixel
+      ImageSetPixel(rotImg, y, width - x - 1, pixel); // Define o valor do pixel na nova imagem
+    }
+  }
+  return rotImg;  // Retornar a imagem rodada em 90 graus anti-horáriox
 }
 
 /// Mirror an image = flip left-right.
@@ -513,7 +525,22 @@ Image ImageRotate(Image img) { ///
 Image ImageMirror(Image img) { ///
   assert (img != NULL);
   // Insert your code here!
-}
+
+  // Obter a largura e altura da imagem para eventual uso
+  int width = img->width;
+  int height = img->height;
+
+  Image mirrorImg = ImageCreate(height, width, img->maxval); // Criação nova imagem chamada mirrorImg
+
+  // Percorrer todos os pixeis da imagem
+  for (int x; x < height; x++) {
+    for (int y; y < width; y++) {
+      uint8 pixel = ImageGetPixel(img, x, y); // Obter o valor do pixel
+      ImageSetPixel(mirrorImg, width-x-1, y, pixel); // Define o valor do pixel imagem espelhada
+    }
+  }
+  return mirrorImg; // Retornar a imagem espelhada
+} 
 
 /// Crop a rectangular subimage from img.
 /// The rectangle is specified by the top left corner coords (x, y) and
