@@ -578,10 +578,7 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
   int maxval = img->maxval;
 
   Image cropImg = ImageCreate(h, w, maxval);  // Criar nova imagem chamada cropImg
-  
-  //ponteiros para os pixels das imagens originais e imagens crop
-  uint8_t** original_Pixel = img->pixel;
-  uint8_t** cropped_pixel = cropImg->pixel;
+
 
   if(cropImg == NULL){
     errCause = "Erro na criação da imagem!";
@@ -590,7 +587,8 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
 
   for (int i = 0; i < h; i++) {
     for (int j = 0; j < w; j++) {
-      cropped_pixel[i][j] = original_Pixel[y + i][x + j];
+      uint8 pixel = ImageGetPixel(img, x + j, y +i);
+      ImageSetPixel(cropImg, j, i, pixel);
       }
     }
   return cropImg;
@@ -711,5 +709,6 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
 /// The image is changed in-place.
 void ImageBlur(Image img, int dx, int dy) { ///
   // Insert your code here!
+  
 }
 
