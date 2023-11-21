@@ -508,7 +508,7 @@ Image ImageRotate(Image img) { ///
   // Percorrer todos os pixeis da imagem
   for (int i = 0; i < height; i++) {
     for (int j = 0; j < width; j++) {
-      uint8 pixel = ImageGetPixel(img, j, y); // Obter o valor do pixel
+      uint8 pixel = ImageGetPixel(img, j, i); // Obter o valor do pixel
       ImageSetPixel(rotImg, i, width - j - 1, pixel); // Define o valor do pixel na nova imagem
     }
   }
@@ -575,8 +575,20 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
 void ImagePaste(Image img1, int x, int y, Image img2) { ///
   assert (img1 != NULL);
   assert (img2 != NULL);
-  assert (ImageValidRect(img1, x, y, img2->width, img2->height));
+  assert (ImageValidRect(img1, x, y, img2->width, img2->height)); // Verifica se a imagem2 que vai ser colada cabe dentro da imagem1
   // Insert your code here!
+
+  // Obter a largura e altura da imagem2 para eventual uso
+  int img2 = img2->width;
+  int img2 = img2->height;
+
+  // Percorrer todos os pixeis da imagem2 
+  for (int j = 0; j < img2->height; j++) {
+    for (int i = 0; i < img2->width; i++) {
+      uint8 pixel = ImageGetPixel(img2, j, i);  // Obter o valor do pixel da posição (j,i) da img2
+      ImageSetPixel(img1, x + j, y + i, pixel); //  Colar o pixel na posição (x+j, y+i) em img1
+    }
+  }
 }
 
 /// Blend an image into a larger image.
@@ -584,12 +596,26 @@ void ImagePaste(Image img1, int x, int y, Image img2) { ///
 /// This modifies img1 in-place: no allocation involved.
 /// Requires: img2 must fit inside img1 at position (x, y).
 /// alpha usually is in [0.0, 1.0], but values outside that interval
-/// may provide interesting effects.  Over/underflows should saturate.
+/// may provide interesting effects. Over/underflows should saturate.
 void ImageBlend(Image img1, int x, int y, Image img2, double alpha) { ///
   assert (img1 != NULL);
   assert (img2 != NULL);
   assert (ImageValidRect(img1, x, y, img2->width, img2->height));
   // Insert your code here!
+
+  // Percorrer os pixeis da imagem2
+  for (int j=0; j < img2->height; j++) {
+    for (int i=0; i < img2->width; i++) {
+      uint8 pixel1 = ImageGetPixel(img1, x + j, y + i); // Obter o valor do pixel da posição (x+j, y+i) da img1
+      uint8 pixel2 = ImageGetPixel(img2, j, i); // Obter o valor do pixel da posição (j,i) da img2
+
+      // Obter o valor do pixel resultante da mistura 
+      uint8 pixel3 = (uint8)((1-alpha) * pixel1 + alpha * pixel2);
+
+      // Colar o pixel na posição (x+j, y+i) em img1
+      ImageSetPixel(img1, x + j, y + i, pixel3);
+    }
+  }
 }
 
 /// Compare an image to a subimage of a larger image.
@@ -600,6 +626,20 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2) { ///
   assert (img2 != NULL);
   assert (ImageValidPos(img1, x, y));
   // Insert your code here!
+
+  // Percorrer os pixeis da imagem2
+  for (int j=0; j < img2->height; j++) {
+    for (int i=0; i < img2->width; i++) {
+      uint8 pixel1 = ImageGetPixel(img1, x + j, y + i); // Obter o valor do pixel da posição (x+j, y+i) da img1
+      uint8 pixel2 = ImageGetPixel(img2, j, i); // Obter o valor do pixel da posição (j,i) da img
+
+      // Caso os pixeis sejam diferentes retorna 0, implicando que a img2 correspondente a uma subimagem da img1 
+      if (pixel1 != pixel2) {
+        return 0;
+      }
+    }
+  }
+  return 1; // Caso nem todos os pixeis forem correspondentes então retorna 1
 }
 
 /// Locate a subimage inside another image.
@@ -610,11 +650,31 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
   assert (img1 != NULL);
   assert (img2 != NULL);
   // Insert your code here!
+
+  // Obter valores das img1 e img2 para serem usados posteriormente
+  int height = img1->height;
+  int width = img1->width;
+  int height2 = img2->height;
+  int width2 = img2->width;
+
+  int height3 = height - height2;
+  int width3 = width - width2;
+
+  // Percorrer todos os pixeis da img1
+  for (int j = 0; j < height3; j++) {
+    for (int i = 0;i < width3; i++) {
+      // Verifica se a img2 corresponde a uma subimagem da img1
+      if (ImageMatchSubImage(img1, i, j, img2)) {
+        *px = i; // Define o valor de *px
+        *py = j; // Define o valor de *py
+        return 1; // Retorna 1 caso seja localizada uma subimagem
+      }
+    }
+  }
+  return 0; // Retorna 0 caso seja falso
 }
 
-
 /// Filtering
-
 /// Blur an image by a applying a (2dx+1)x(2dy+1) mean filter.
 /// Each pixel is substituted by the mean of the pixels in the rectangle
 /// [x-dx, x+dx]x[y-dy, y+dy].
