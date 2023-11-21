@@ -441,6 +441,27 @@ void ImageNegative(Image img) { ///
 void ImageThreshold(Image img, uint8 thr) { ///
   assert (img != NULL);
   // Insert your code here!
+  // obter info da imagem para eventual uso
+  int height = img->height;
+  int width = img->width;
+  int maxval = img->maxval;
+  int pixel = img->pixel;
+
+  // iterar sobre cada pixel da imagem, para poder aceder a cada pixel individualmente
+  for (int i = 0; i < height; i++){
+    for (int j = 0; j < width; j++){
+      // obter o pixel atual nas coordenadas i,j
+      uint8 actual_pixel = ImageGetPixel(img,j,i);
+      // se o pixel actual for menor que thr, o pixel é definido para preto
+      if (actual_pixel < thr){
+        ImageSetPixel(img,j,i,(uint8)(0));
+      
+      } else{
+        ImageSetPixel(img,j,i,(uint8)(maxval)); // caso contrário é definido para o nivel maxval
+      }
+    }
+  }
+
 }
 
 /// Brighten image by a factor.
@@ -478,6 +499,9 @@ void ImageBrighten(Image img, double factor) { ///
 Image ImageRotate(Image img) { ///
   assert (img != NULL);
   // Insert your code here!
+  
+
+
 }
 
 /// Mirror an image = flip left-right.
