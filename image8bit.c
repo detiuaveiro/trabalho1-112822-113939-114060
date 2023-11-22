@@ -339,7 +339,7 @@ void ImageStats(Image img, uint8* min, uint8* max) { ///
   assert (max != NULL); // Verificar se *max é diferente de NULL 
 // Insert your code here!
 
-  *min = *max = ImageGetPixel(img ,0 , 0); // Inicializa *min e *max com o valor do primeiro pixel da imagem
+  *min = *max = ImageGetPixel(img, 0, 0); // Inicializa *min e *max com o valor do primeiro pixel da imagem
   int height = img->height; // Obtém a altura da imagem
   int width = img->width; // Obtém a largura da imagem
 
@@ -382,6 +382,7 @@ int ImageValidRect(Image img, int x, int y, int w, int h) { ///
 static inline int G(Image img, int x, int y) {
   int index = y * img->width + x;
   // Insert your code here!
+  //printf("\nwidth: %d, height: %d, x: %d, y: %d, index: %d", img->width,img->height,x,y,index);
   assert (0 <= index && index < img->width*img->height);
   return index;
 }
@@ -480,10 +481,18 @@ void ImageBrighten(Image img, double factor) {
       // obter o pixel atual nas coordenadas i,j
       uint8 actual_pixel = ImageGetPixel(img,j,i);
       double brighten = actual_pixel * factor;
+      // arredondamento (correção erro "byte 90, linha 4")
+      double decimal = brighten - (int)brighten;
+      if (decimal >= 0.5) {
+          brighten = (int)brighten + 1;
+      } else {
+          brighten = (int)brighten;
+      }
+
       if(brighten > maxval){
         brighten = maxval; 
       }
-      ImageSetPixel(img,j,i,(uint8)(brighten));
+      ImageSetPixel(img,j,i,(uint8)brighten);
     }
   }
 } 
@@ -584,7 +593,7 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
 
   for (int i = 0; i < h; i++) {
     for (int j = 0; j < w; j++) {
-      uint8 pixel = ImageGetPixel(img, x + j, y +i);   // Obter o pixel da imagem cuja posição é (x + j, y + i)
+      uint8 pixel = ImageGetPixel(img, x + j, y + i);   // Obter o pixel da imagem cuja posição é (x + j, y + i)
       ImageSetPixel(cropImg, j, i, pixel);      // Definir o pixel da imagem cortada na posição (j, i)
       }
     }
@@ -598,18 +607,18 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
 /// This modifies img1 in-place: no allocation involved.
 /// Requires: img2 must fit inside img1 at position (x, y).
 void ImagePaste(Image img1, int x, int y, Image img2) { ///
-  assert (img1 != NULL);
-  assert (img2 != NULL);
+  assert(img1 != NULL);
+  assert(img2 != NULL);
   // Obter a largura e altura da imagem2 para eventual uso
-  int img2_width = img2->width;
-  int img2_height = img2->height;
-  assert (ImageValidRect(img1, x, y, img2_width, img2_height)); // Verifica se a imagem2 que vai ser colada cabe dentro da imagem1
+  int img2_width = ImageWidth(img2);
+  int img2_height = ImageHeight(img2);
+  assert(ImageValidRect(img1, x, y, img2_width, img2_height)); // Verifica se a imagem2 que vai ser colada cabe dentro da imagem1
 
-  // Percorrer todos os pixeis da imagem2 
-  for (int j = 0; j < img2->height; j++) {
-    for (int i = 0; i < img2->width; i++) {
-      uint8 pixel = ImageGetPixel(img2, j, i);  // Obter o valor do pixel da posição (j,i) da img2
-      ImageSetPixel(img1, x + j, y + i, pixel); //  Colar o pixel na posição (x+j, y+i) em img1
+  // Percorrer todos os pixeis da imagem2
+  for (int i = 0; i < img2_height; i++) {
+    for (int j = 0; j < img2_width; j++) {
+      uint8 pixel = ImageGetPixel(img2, j, i);  // Obter o valor do pixel da posição (j, i) da img2
+      ImageSetPixel(img1, x + j, y + i, pixel); // Colar o pixel na posição (x+j, y+i) em img1
     }
   }
 }
