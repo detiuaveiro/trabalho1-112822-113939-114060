@@ -629,26 +629,43 @@ void ImagePaste(Image img1, int x, int y, Image img2) { ///
 /// Requires: img2 must fit inside img1 at position (x, y).
 /// alpha usually is in [0.0, 1.0], but values outside that interval
 /// may provide interesting effects. Over/underflows should saturate.
-void ImageBlend(Image img1, int x, int y, Image img2, double alpha) { ///
-  assert (img1 != NULL);
-  assert (img2 != NULL);
-  assert (ImageValidRect(img1, x, y, img2->width, img2->height));
-  // Insert your code here!
 
-  // Percorrer os pixeis da imagem2
-  for (int j=0; j < img2->height; j++) {
-    for (int i=0; i < img2->width; i++) {
-      uint8 pixel1 = ImageGetPixel(img1, x + j, y + i); // Obter o valor do pixel da posição (x+j, y+i) da img1
-      uint8 pixel2 = ImageGetPixel(img2, j, i); // Obter o valor do pixel da posição (j,i) da img2
+/// Mescla uma imagem em uma imagem maior.
+/// Mescla img2 na posição (x, y) da img1.
+/// Isso modifica a img1 no local: nenhuma alocação envolvida.
+/// Requer: img2 deve caber dentro de img1 na posição (x, y).
+/// O alpha geralmente está no intervalo [0.0, 1.0], mas valores fora desse intervalo
+/// podem proporcionar efeitos interessantes. Over/underflows devem saturar.
 
-      // Obter o valor do pixel resultante da mistura 
-      uint8 pixel3 = (uint8)((1-alpha) * pixel1 + alpha * pixel2);
+/// Blend an image into a larger image.
+/// Blend img2 into position (x, y) of img1.
+/// This modifies img1 in-place: no allocation involved.
+/// Requires: img2 must fit inside img1 at position (x, y).
+/// alpha usually is in [0.0, 1.0], but values outside that interval
+/// may provide interesting effects. Over/underflows should saturate.
+void ImageBlend(Image img1, int x, int y, Image img2, double alpha) {
+  assert(img1 != NULL);
+  assert(img2 != NULL);
+  assert(ImageValidRect(img1, x, y, img2->width, img2->height));
 
-      // Colar o pixel na posição (x+j, y+i) em img1
-      ImageSetPixel(img1, x + j, y + i, pixel3);
+  // Percorrer os pixels da imagem2
+  for (int j = 0; j < img2->height; j++) {
+    for (int i = 0; i < img2->width; i++) {
+      // Obter o valor do pixel da posição (x+i, y+j) da img1
+      uint8 pixel1 = ImageGetPixel(img1, x + i, y + j);
+      // Obter o valor do pixel da posição (i, j) da img2
+      uint8 pixel2 = ImageGetPixel(img2, i, j);
+      // Obter o valor do pixel resultante da mistura
+      uint8 pixel3 = (uint8)((1 - alpha) * pixel1 + 0.5 + alpha * pixel2);
+      // Colar o pixel na posição (x+i, y+j) em img1
+      ImageSetPixel(img1, x + i, y + j, pixel3);
+      //printf("pixel1: %d, pixel2: %d, blendedPixel: %d\n", pixel1, pixel2, pixel3);
     }
   }
 }
+
+
+
 
 /// Compare an image to a subimage of a larger image.
 /// Returns 1 (true) if img2 matches subimage of img1 at pos (x, y).
