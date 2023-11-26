@@ -162,6 +162,15 @@ test_ImageBlur2_3: $(PROGS) setup
 
 #--------------------------------------------------------------------
 
+# extra test
+
+test_extrapaste1_1: $(PROGS) setup
+	./imageTool extra_tests/image pgm/medium/mandrill_512x512.pgm paste 511,511 save extra_tests/extra_paste1_2.pgm
+
+test_extraTest1_1: $(PROGS) setup
+	./imageTool extra_tests/image4_2.pgm extra_tests/image4_1.pgm locate save extra_tests/extra_locate4.pgm
+
+
 .PHONY: tests
 tests: $(TESTS)
 
