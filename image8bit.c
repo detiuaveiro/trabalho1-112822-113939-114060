@@ -45,7 +45,8 @@
 // Maximum value you can store in a pixel (maximum maxval accepted)
 const uint8 PixMax = 255;
 static int count_locate = 0;
-static int count_blur = 0;
+static size_t count_blur = 0;
+
 
 // Internal structure for storing 8-bit graymap images
 struct image {
@@ -782,7 +783,7 @@ void ImageBlur(Image img, int dx, int dy) {
     }
   }
 
-  printf("Número de operações relevantes: %d\n", count_blur);
+  printf("Número de operações relevantes: %ld\n", count_blur);
   // Libertar a memória
   ImageDestroy(&blurImg);
 }
