@@ -13,6 +13,8 @@ TESTS = test1 test2 test3 test4 test5 test6 test7 test8 test9
 
 tests_ImageLocateSubImage = test_paste1_1 test_ImageLocateSubImage1_1 test_paste1_2 test_ImageLocateSubImage1_2 test_paste1_3 test_ImageLocateSubImage1_3 test_paste2_1 test_ImageLocateSubImage2_1 test_paste2_2 test_ImageLocateSubImage2_2 test_paste2_3 test_ImageLocateSubImage2_3 test_paste3_1 test_ImageLocateSubImage3_1 test_paste3_2 test_ImageLocateSubImage3_2 test_paste3_3 test_ImageLocateSubImage3_3
 
+tests_ImageBlur = test_ImageBlur1_1 test_ImageBlur1_2 test_ImageBlur1_3 test_ImageBlur2_1 test_ImageBlur2_2 test_ImageBlur2_3
+
 # Default rule: make all programs
 all: $(PROGS)
 
@@ -118,7 +120,7 @@ test_ImageLocateSubImage2_3: $(PROGS) setup
 #--------------------------------------------------------------------
 
 test_paste3_1: $(PROGS) setup
-	./imageTool pgm/small/.pgm pgm/large/airfield-05_1600x1200.pgm paste 0,0 save tests_ImageLocateSubImage/paste3_1.pgm
+	./imageTool pgm/small/bird_256x256.pgm pgm/large/airfield-05_1600x1200.pgm paste 0,0 save tests_ImageLocateSubImage/paste3_1.pgm
 
 test_ImageLocateSubImage3_1: $(PROGS) setup
 	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste3_1.pgm locate save tests_ImageLocateSubImage/locate3_1.pgm 
@@ -136,11 +138,38 @@ test_ImageLocateSubImage3_3: $(PROGS) setup
 	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste3_3.pgm locate save tests_ImageLocateSubImage/locate3_3.pgm 
 
 #--------------------------------------------------------------------
+
+
+test_ImageBlur1_1: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm blur 20,3 save tests_ImageBlur/blur1_1.pgm
+
+test_ImageBlur1_2: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm blur 3,20 save tests_ImageBlur/blur1_2.pgm
+
+test_ImageBlur1_3: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm blur 20,20 save tests_ImageBlur/blur1_3.pgm
+
+#--------------------------------------------------------------------
+
+test_ImageBlur2_1: $(PROGS) setup
+	./imageTool pgm/large/einstein_940x940.pgm blur 20,3 save tests_ImageBlur/blur2_1.pgm
+
+test_ImageBlur2_2: $(PROGS) setup
+	./imageTool pgm/large/einstein_940x940.pgm blur 3,20 save tests_ImageBlur/blur2_2.pgm
+
+test_ImageBlur2_3: $(PROGS) setup
+	./imageTool pgm/large/einstein_940x940.pgm blur 20,20 save tests_ImageBlur/blur2_3.pgm
+
+#--------------------------------------------------------------------
+
 .PHONY: tests
 tests: $(TESTS)
 
 .PHONY: tests_ImageLocateSubImage
 tests_ImageLocateSubImage: $(tests_ImageLocateSubImage)
+
+.PHONY: tests_ImageBlur
+tests_ImageBlur: $(tests_ImageBlur)
 
 # Make uses builtin rule to create .o from .c files.
 

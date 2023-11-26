@@ -44,7 +44,8 @@
 
 // Maximum value you can store in a pixel (maximum maxval accepted)
 const uint8 PixMax = 255;
-static int count = 0;
+static int count_locate = 0;
+//static int count_blur = 0;
 
 // Internal structure for storing 8-bit graymap images
 struct image {
@@ -681,7 +682,7 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2) { ///
     for (int i=0; i < img2->width; i++) {
       uint8 pixel1 = ImageGetPixel(img1, x + i, y + j); // Obter o valor do pixel da posição (x+i, y+j) da img1 //
       uint8 pixel2 = ImageGetPixel(img2, i, j); // Obter o valor do pixel da posição (i,j) da img
-      count++;
+      count_locate++;
       // Caso os pixeis sejam diferentes retorna 0, implicando que a img2 correspondente a uma subimagem da img1 
       if (pixel1 != pixel2) {
         return 0;
@@ -716,12 +717,12 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
       if (ImageMatchSubImage(img1, i, j, img2)) {
         *px = i; // Define o valor de *px
         *py = j; // Define o valor de *py
-        printf("Número de comparações: %d\n", count);
+        printf("Número de comparações: %d\n", count_locate);
         return 1; // Retorna 1 caso seja localizada uma subimagem
       }
     }
   }
-  printf("Número de comparações: %d\n", count);
+  printf("Número de comparações: %d\n", count_locate);
   return 0; // Retorna 0 caso seja falso
 }
 
