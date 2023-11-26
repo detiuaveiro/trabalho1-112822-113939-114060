@@ -45,7 +45,7 @@
 // Maximum value you can store in a pixel (maximum maxval accepted)
 const uint8 PixMax = 255;
 static int count_locate = 0;
-//static int count_blur = 0;
+static int count_blur = 0;
 
 // Internal structure for storing 8-bit graymap images
 struct image {
@@ -197,6 +197,7 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
 // Inicializa todos os pixels da imagem com o valor mínimo de intensidade (0) como padrão
   for (int i = 0; i < width * height; i++) {
         newImg->pixel[i] = 0;
+        count_blur++;           // número de operações onde o pixel[i] = 0
   }
   return newImg;
 }
@@ -752,6 +753,8 @@ void ImageBlur(Image img, int dx, int dy) {
           if (ImageValidPos(img, i + x, j + y)) {   // Verifica se o posição está dentro da imagem
             soma += ImageGetPixel(img, i + x, j + y);   // Somar o valor dos pixeis válidos
             count++;                                    // Incrementa o contador
+
+            count_blur+=2;                //número de operações ao interar soma e count
           }   
         }
       }
@@ -760,8 +763,11 @@ void ImageBlur(Image img, int dx, int dy) {
       uint8 pixel;
       if (count == 0) {
         pixel = ImageGetPixel(img, i, j);
+        count_blur++;                //número de operações para calcular pixel
       } else {
         pixel = (uint8)((soma + count / 2) / count);
+        count_blur+=3;                //número de operações para calcular pixel
+
       }
       ImageSetPixel(blurImg, i, j, pixel);      // Define o valor na imagem desfocada
     }
@@ -771,9 +777,12 @@ void ImageBlur(Image img, int dx, int dy) {
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
       uint8 blurredPixel = ImageGetPixel(blurImg, x, y);
+      count_blur++;                //número de operações de blurredPixel
       ImageSetPixel(img, x, y, blurredPixel); // Substitui os pixeis pelos valores filtrados
     }
   }
+
+  printf("Número de operações relevantes: %d\n", count_blur);
   // Libertar a memória
   ImageDestroy(&blurImg);
 }
