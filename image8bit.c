@@ -44,7 +44,7 @@
 
 // Maximum value you can store in a pixel (maximum maxval accepted)
 const uint8 PixMax = 255;
-static int count_locate = 0;
+static size_t count_locate = 0;
 static size_t count_blur = 0;
 
 
@@ -719,12 +719,12 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
       if (ImageMatchSubImage(img1, i, j, img2)) {
         *px = i; // Define o valor de *px
         *py = j; // Define o valor de *py
-        printf("Número de comparações: %d\n", count_locate);
+        printf("Número de comparações: %ld\n", count_locate);
         return 1; // Retorna 1 caso seja localizada uma subimagem
       }
     }
   }
-  printf("Número de comparações: %d\n", count_locate);
+  printf("Número de comparações: %ld\n", count_locate);
   return 0; // Retorna 0 caso seja falso
 }
 

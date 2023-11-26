@@ -97,6 +97,11 @@ test_paste1_3: $(PROGS) setup
 test_ImageLocateSubImage1_3: $(PROGS) setup
 	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste1_3.pgm locate save tests_ImageLocateSubImage/locate1_3.pgm 
 
+test_paste1_4: $(PROGS) setup
+	./imageTool extra_tests/fff_1.pgm extra_tests/fff.pgm paste 255,255 save tests_ImageLocateSubImage/paste1_4.pgm
+
+test_ImageLocateSubImage1_4: $(PROGS) setup
+	./imageTool extra_tests/fff_1.pgm tests_ImageLocateSubImage/paste1_4.pgm locate save tests_ImageLocateSubImage/locate1_4.pgm 
 #--------------------------------------------------------------------
 
 test_paste2_1: $(PROGS) setup
@@ -116,6 +121,7 @@ test_paste2_3: $(PROGS) setup
 
 test_ImageLocateSubImage2_3: $(PROGS) setup
 	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste2_3.pgm locate save tests_ImageLocateSubImage/locate2_3.pgm 
+
 
 #--------------------------------------------------------------------
 
@@ -169,6 +175,8 @@ test_extrapaste1_1: $(PROGS) setup
 
 test_extraTest1_1: $(PROGS) setup
 	./imageTool extra_tests/image4_2.pgm extra_tests/image4_1.pgm locate save extra_tests/extra_locate4.pgm
+
+	
 
 
 .PHONY: tests
