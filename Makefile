@@ -11,6 +11,8 @@ PROGS = imageTool imageTest
 
 TESTS = test1 test2 test3 test4 test5 test6 test7 test8 test9
 
+tests_ImageLocateSubImage = test_paste1_1 test_ImageLocateSubImage1_1 test_paste1_2 test_ImageLocateSubImage1_2 test_paste1_3 test_ImageLocateSubImage1_3 test_paste2_1 test_ImageLocateSubImage2_1 test_paste2_2 test_ImageLocateSubImage2_2 test_paste2_3 test_ImageLocateSubImage2_3 test_paste3_1 test_ImageLocateSubImage3_1 test_paste3_2 test_ImageLocateSubImage3_2 test_paste3_3 test_ImageLocateSubImage3_3
+
 # Default rule: make all programs
 all: $(PROGS)
 
@@ -73,8 +75,72 @@ test9: $(PROGS) setup
 	./imageTool test/original.pgm blur 7,7 save blur.pgm
 	cmp blur.pgm test/blur.pgm
 
+#--------------------------------------------------------------------
+
+test_paste1_1: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm pgm/small/art4_300x300.pgm paste 0,0 save tests_ImageLocateSubImage/paste1_1.pgm
+
+test_ImageLocateSubImage1_1: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste1_1.pgm locate save tests_ImageLocateSubImage/locate1_1.pgm
+
+test_paste1_2: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm pgm/small/art4_300x300.pgm paste 21,21 save tests_ImageLocateSubImage/paste1_2.pgm
+
+test_ImageLocateSubImage1_2: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste1_2.pgm locate save tests_ImageLocateSubImage/locate1_2.pgm  
+
+test_paste1_3: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm pgm/small/art4_300x300.pgm paste 43,43 save tests_ImageLocateSubImage/paste1_3.pgm
+
+test_ImageLocateSubImage1_3: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste1_3.pgm locate save tests_ImageLocateSubImage/locate1_3.pgm 
+
+#--------------------------------------------------------------------
+
+test_paste2_1: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm pgm/medium/mandrill_512x512.pgm paste 0,0 save tests_ImageLocateSubImage/paste2_1.pgm
+
+test_ImageLocateSubImage2_1: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste2_1.pgm locate save tests_ImageLocateSubImage/locate2_1.pgm 
+
+test_paste2_2: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm pgm/medium/mandrill_512x512.pgm paste 127,127 save tests_ImageLocateSubImage/paste2_2.pgm
+
+test_ImageLocateSubImage2_2: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste2_2.pgm locate save tests_ImageLocateSubImage/locate2_2.pgm 
+
+test_paste2_3: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm pgm/medium/mandrill_512x512.pgm paste 255,255 save tests_ImageLocateSubImage/paste2_3.pgm
+
+test_ImageLocateSubImage2_3: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste2_3.pgm locate save tests_ImageLocateSubImage/locate2_3.pgm 
+
+#--------------------------------------------------------------------
+
+test_paste3_1: $(PROGS) setup
+	./imageTool pgm/small/.pgm pgm/large/airfield-05_1600x1200.pgm paste 0,0 save tests_ImageLocateSubImage/paste3_1.pgm
+
+test_ImageLocateSubImage3_1: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste3_1.pgm locate save tests_ImageLocateSubImage/locate3_1.pgm 
+
+test_paste3_2: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm pgm/large/airfield-05_1600x1200.pgm paste 671,471 save tests_ImageLocateSubImage/paste3_2.pgm
+
+test_ImageLocateSubImage3_2: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste3_2.pgm locate save tests_ImageLocateSubImage/locate3_2.pgm 
+
+test_paste3_3: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm pgm/large/airfield-05_1600x1200.pgm paste 1343,943 save tests_ImageLocateSubImage/paste3_3.pgm
+
+test_ImageLocateSubImage3_3: $(PROGS) setup
+	./imageTool pgm/small/bird_256x256.pgm tests_ImageLocateSubImage/paste3_3.pgm locate save tests_ImageLocateSubImage/locate3_3.pgm 
+
+#--------------------------------------------------------------------
 .PHONY: tests
 tests: $(TESTS)
+
+.PHONY: tests_ImageLocateSubImage
+tests_ImageLocateSubImage: $(tests_ImageLocateSubImage)
 
 # Make uses builtin rule to create .o from .c files.
 

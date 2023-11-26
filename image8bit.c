@@ -44,6 +44,7 @@
 
 // Maximum value you can store in a pixel (maximum maxval accepted)
 const uint8 PixMax = 255;
+static int count = 0;
 
 // Internal structure for storing 8-bit graymap images
 struct image {
@@ -52,7 +53,6 @@ struct image {
   int maxval;   // maximum gray value (pixels with maxval are pure WHITE)
   uint8* pixel; // pixel data (a raster scan)
 };
-
 
 // This module follows "design-by-contract" principles.
 // Read `Design-by-Contract.md` for more details.
@@ -679,9 +679,9 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2) { ///
   // Percorrer os pixeis da imagem2
   for (int j=0; j < img2->height; j++) {
     for (int i=0; i < img2->width; i++) {
-      uint8 pixel1 = ImageGetPixel(img1, x + j, y + i); // Obter o valor do pixel da posição (x+j, y+i) da img1
-      uint8 pixel2 = ImageGetPixel(img2, j, i); // Obter o valor do pixel da posição (j,i) da img
-
+      uint8 pixel1 = ImageGetPixel(img1, x + i, y + j); // Obter o valor do pixel da posição (x+i, y+j) da img1 //
+      uint8 pixel2 = ImageGetPixel(img2, i, j); // Obter o valor do pixel da posição (i,j) da img
+      count++;
       // Caso os pixeis sejam diferentes retorna 0, implicando que a img2 correspondente a uma subimagem da img1 
       if (pixel1 != pixel2) {
         return 0;
@@ -711,15 +711,17 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
 
   // Percorrer todos os pixeis da img1
   for (int j = 0; j < height3; j++) {
-    for (int i = 0;i < width3; i++) {
+    for (int i = 0; i < width3; i++) {
       // Verifica se a img2 corresponde a uma subimagem da img1
       if (ImageMatchSubImage(img1, i, j, img2)) {
         *px = i; // Define o valor de *px
         *py = j; // Define o valor de *py
+        printf("Número de comparações: %d\n", count);
         return 1; // Retorna 1 caso seja localizada uma subimagem
       }
     }
   }
+  printf("Número de comparações: %d\n", count);
   return 0; // Retorna 0 caso seja falso
 }
 
